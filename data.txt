@@ -1,0 +1,18 @@
+not true. --> false
+true and false. --> false
+length([2,3,4,5]). --> 4
+[2,3]++[[4]]. --> [2,3,[4]]
+(fun (X) -> X+2 end)(40). --> 42
+fun (X) -> X+2 end(40). --> 43
+2#100. --> 4
+100#2. --> illegal base
+34#2. --> 2
+2#34. --> illegal
+[97,98,99]. --> "abc"
+[$h,$e,$l,$l,$o].  -->"hello"
+[$h,$e,$l,$l,o]. --> ["h", "e", "l", "l", o]
+[34,3,5,36,37]. --> [34,3,5,36,37].
+[34,35,36,37]. --> "\"#$%"
+false and (3 == (4 div 0)). --> error
+false andalso (3 == (4 div 0)). --> false
+true orelse (3 == (4 div 0)).  --> true

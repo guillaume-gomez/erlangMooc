@@ -1,5 +1,5 @@
 -module(ex).
--export([perimeter/1, area/1]).
+-export([perimeter/1, area/1, bitSum/1, bitSumR/1]).
 
 %Shapes
 % let's is begin with simple shapes like square, rhombus, rectangle, and circle
@@ -21,7 +21,7 @@ perimeter({ triangle,[{ vertex, {X1, Y1} }, { vertex, {X2, Y2} }, { vertex, {X3,
   Edge1 = distance(X1, Y1, X2, Y2),
   Edge2 = distance(X1, Y1, X3, Y3),
   Edge3 = distance(X2, Y2, X3, Y3),
-  Edge1 + Edge2 + Edge3;
+  Edge1 + Edge2 + Edge3.
 
 % A tool function de compute the length of an edge
 distance(X1,Y1, X2, Y2) ->
@@ -99,3 +99,19 @@ area({ triangle,[{ vertex, {X1, Y1} }, { vertex, {X2, Y2} }, { vertex, {X3, Y3} 
 % See whether you can make both a direct recursive and a tail recursive definition.
 
 % Which do you think is better? Why?
+
+
+
+bitSum(N) ->
+  bitSum(N, 0).
+
+
+bitSum(0, Acc) -> Acc;
+
+bitSum(N, Acc) ->
+  bitSum(N div 2 , Acc + N rem 2).
+
+bitSumR(0) -> 0;
+
+bitSumR(N) ->
+  bitSumR(N div 2) + N rem 2.

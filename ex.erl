@@ -21,7 +21,10 @@ perimeter({ triangle,[{ vertex, {X1, Y1} }, { vertex, {X2, Y2} }, { vertex, {X3,
   Edge1 = distance(X1, Y1, X2, Y2),
   Edge2 = distance(X1, Y1, X3, Y3),
   Edge3 = distance(X2, Y2, X3, Y3),
-  Edge1 + Edge2 + Edge3.
+  Edge1 + Edge2 + Edge3;
+
+perimeter({shape, Vertices}) ->
+  iterateVertex(Vertices).
 
 % A tool function de compute the length of an edge
 distance(X1,Y1, X2, Y2) ->
@@ -79,8 +82,19 @@ area({ triangle,[{ vertex, {X1, Y1} }, { vertex, {X2, Y2} }, { vertex, {X3, Y3} 
 
 % we can see that triangle data structure can be generalized for any shape. So a shape could be represented like this
 % {shape, [{ vertex, {X1, Y1} }, { vertex, {X2, Y2} }, { vertex, {X3, Y3} }, ..., { vertex, {XN, YN} }] }
-% perimeter({ shape, [P | Q] }) ->
 
+%[{ vertex, {0, 0} }, { vertex, {5, 0} }, { vertex, {0, 5} }]
+
+% perimeter({shape, [Vertices]}) ->
+%   iterateVertex([Vertices]).
+
+iterateVertex([{ vertex, {X2, Y2} }]) ->
+  %distance(X1, Y1, X2, Y2);
+  0;
+
+iterateVertex(L) ->
+  [{ vertex, {X1, Y1} }, { vertex, {X2, Y2} } |  Q] = L,
+  distance(X1, Y1, X2, Y2) + iterateVertex([{ vertex, {X2, Y2} } | Q]).
 
 
 

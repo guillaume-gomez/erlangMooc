@@ -1,5 +1,5 @@
 -module(ex).
--export([perimeter/1, area/1, bitSum/1, bitSumR/1]).
+-export([perimeter/1, area/1,  enclose/1, bitSum/1, bitSumR/1]).
 
 %Shapes
 % let's is begin with simple shapes like square, rhombus, rectangle, and circle
@@ -23,13 +23,27 @@ perimeter({ triangle,[{ vertex, {X1, Y1} }, { vertex, {X2, Y2} }, { vertex, {X3,
   Edge3 = distance(X2, Y2, X3, Y3),
   Edge1 + Edge2 + Edge3;
 
-perimeter({shape, Vertices}) ->
-  iterateVertex(Vertices).
+% We can see that triangle data structure can be generalized for any shape. So a shape could be represented like this
+% {shape, [{ vertex, {X1, Y1} }, { vertex, {X2, Y2} }, { vertex, {X3, Y3} }, ..., { vertex, {XN, YN} }] }
+% Note: we assume that the vertices are ordered contiguously in the array.
 
-% A tool function de compute the length of an edge
+% So the function perimeter can be extended :
+
+% perimeter({shape, [Vertices]}) ->
+perimeter({shape, [H|Q]}) ->
+  iterateVertex(H, [H|Q]).
+
+% A tool function to compute the length of an edge
 distance(X1,Y1, X2, Y2) ->
   math:sqrt(math:pow(X1 - X2, 2) + math:pow(Y1 - Y2, 2)).
 
+% iterateVertex(FirstVertex, [Vertices]).
+iterateVertex({ vertex, {X1, Y1} } , [{ vertex, {X2, Y2} }]) ->
+  distance(X1, Y1, X2, Y2);
+
+iterateVertex(H, L) ->
+  [{ vertex, {X1, Y1} }, { vertex, {X2, Y2} } |  Q] = L,
+  distance(X1, Y1, X2, Y2) + iterateVertex(H, [{ vertex, {X2, Y2} } | Q]).
 
 % Examples of perimeter for different shapes
 %ex:perimeter({square,{5,5}, 25 }).
@@ -41,6 +55,11 @@ distance(X1,Y1, X2, Y2) ->
 %ex:perimeter({circle,{5,5}, 1 }).
 % -> 6.283185307179586
 %ex:perimeter({ triangle,[{ vertex, {0, 0} }, { vertex, {0, 5} }, { vertex, {5, 0} }] }).
+% -> 17.071067811865476
+%ex:perimeter({ shape,[{ vertex, {0, 0} }, { vertex, {0, 5} }, { vertex, {5, 0} }] }).
+% -> 17.071067811865476
+%ex:perimeter({ shape,[{ vertex, {0, 0} }, { vertex, {0, 5} }, { vertex, {5, 5} } ,{ vertex, {5, 0} }] }).
+% -> 20
 
 area({ square, {_X, _Y}, W }) ->
   W * W;
@@ -79,53 +98,76 @@ area({ triangle,[{ vertex, {X1, Y1} }, { vertex, {X2, Y2} }, { vertex, {X3, Y3} 
 % -> 25.132741228718345
 %ex:area({ triangle,[{ vertex, {0, 0} }, { vertex, {0, 5} }, { vertex, {5, 0} }] }).
 % -> 12.5
+%ex:area({ shape,[{ vertex, {0, 0} }, { vertex, {0, 5} }, { vertex, {5, 5} } ,{ vertex, {5, 0} }] }).
+% -> 12.5
 
-% we can see that triangle data structure can be generalized for any shape. So a shape could be represented like this
-% {shape, [{ vertex, {X1, Y1} }, { vertex, {X2, Y2} }, { vertex, {X3, Y3} }, ..., { vertex, {XN, YN} }] }
-
-%[{ vertex, {0, 0} }, { vertex, {5, 0} }, { vertex, {0, 5} }]
-
-% perimeter({shape, [Vertices]}) ->
-%   iterateVertex([Vertices]).
-
-iterateVertex([{ vertex, {X2, Y2} }]) ->
-  %distance(X1, Y1, X2, Y2);
-  0;
-
-iterateVertex(L) ->
-  [{ vertex, {X1, Y1} }, { vertex, {X2, Y2} } |  Q] = L,
-  distance(X1, Y1, X2, Y2) + iterateVertex([{ vertex, {X2, Y2} } | Q]).
+% I could not manage the area function for any shape, because the results depends on sereral parameters.(Is the shape concave or convex ? Is it a regular polygon ? )
 
 
+% Enclose
 
-% Shapes
-% Define a function perimeter/1 which takes a shape and returns the perimeter of the shape.
+% For simple shapes
+enclose({rectangle, {X, Y}, W, H}) ->
+  {rectangle, {X, Y}, W, H};
 
-% Choose a suitable representation of triangles, and augment area/1 and perimeter/1 to handle this case too.
 
-% Define a function enclose/1 that takes a shape an returns the smallest enclosing rectangle of the shape.
+enclose({square, {X, Y}, W}) ->
+  {rectangle, {X, Y}, W, W};
 
+
+enclose({rhombus, {X, Y}, W}) ->
+  {rectangle, {X, Y}, W, W};
+
+enclose({circle, {X, Y}, R}) ->
+  {rectangle, {X, Y}, R, R};
+
+% For generic shape
+enclose({_, [{vertex, {X, Y} }|Q]}) ->
+  enclose([{vertex, {X, Y} }|Q], X, X, Y, Y).
+
+
+enclose([ {vertex, {X, Y} }|Q], XMin, XMax, YMin, YMax) ->
+  NewXmin = min(X, XMin),
+  NewXMax = max(X, XMax),
+  NewYMin = min(Y, YMin),
+  NewYMax = max(Y, YMax),
+  enclose(Q, NewXmin, NewXMax, NewYMin, NewYMax);
+
+enclose([], XMin, XMax, YMin, YMax) ->
+  CenterX = (XMin + XMax)/2,
+  CenterY = (YMin + YMax)/2,
+  { rectangle, { CenterX, CenterY }, distance(XMin, 0, XMax, 0), distance(0, YMin, 0, YMax) }.
+
+
+% examples
+% ex:enclose({ shape,[{ vertex, {0, 0} }, { vertex, {0, 5} }, { vertex, {5, 5} } ,{ vertex, {5, 0} }] }).
+% --> {rectangle,{2.5,2.5},5.0,5.0}
+% ex:enclose({rectangle,{5,5}, 5, 2 }).
+% --> {rectangle,{2.5,2.5},5.0,5.0}
+% ex:enclose({square,{5,5}, 5 }).
+% --> {rectangle,{5,5},5,5}
+%ex:enclose({rhombus,{5,5}, 5 }).
+% --> {rectangle,{5,5},5,5}
+% ex:enclose({circle,{5,5}, 10 }).
+% --> {rectangle,{5,5},10,10}
 
 
 % Summing the bits
-% Define a function bits/1 that takes a positive integer N and returns the sum of the bits in the binary representation. For example bits(7) is 3 and bits(8) is 1.
-
-% See whether you can make both a direct recursive and a tail recursive definition.
-
-% Which do you think is better? Why?
-
-
-
+%tail recursive version
 bitSum(N) ->
   bitSum(N, 0).
-
 
 bitSum(0, Acc) -> Acc;
 
 bitSum(N, Acc) ->
   bitSum(N div 2 , Acc + N rem 2).
 
+% direct recursive version
 bitSumR(0) -> 0;
 
 bitSumR(N) ->
   bitSumR(N div 2) + N rem 2.
+
+
+% Which do you think is better? Why?
+% tail recursive is more efficiant than direct recursive because it optimizes the stack view : no intermediate states.

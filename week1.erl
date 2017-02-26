@@ -1,4 +1,4 @@
--module(ex).
+-module(week1).
 -export([perimeter/1, area/1,  enclose/1, bitSum/1, bitSumR/1]).
 
 %Shapes

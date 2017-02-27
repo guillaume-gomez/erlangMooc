@@ -1,5 +1,5 @@
 -module(week2dot6).
--export([product/1, productT/1, maximum/1]).
+-export([product/1, productT/1, maximum/1,maximumT/1]).
 
 % the product of a list
 product([]) ->
@@ -20,4 +20,24 @@ productT(List) ->
 
 
 % the maximum of a list
-maximum(1) -> 1.
+% I choose as smallest value -100000
+
+maximumT(List) ->
+  maximumT(List, -100000).
+
+maximumT([], Max) ->
+  Max;
+
+maximumT([H|T], Max) ->
+  NewMax = max(H, Max),
+  maximumT(T, NewMax).
+
+
+maximum([]) ->
+  -100000;
+
+maximum([H|T]) ->
+  max(maximum(T), H).
+
+
+% I find the direct recusion for the prodcut function. On the opposite, tail recursion seems more intuitive to implement for maximum

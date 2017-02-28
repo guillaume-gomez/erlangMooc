@@ -20,10 +20,9 @@ productT(List) ->
 
 
 % the maximum of a list
-% I choose as smallest value -100000
 
-maximumT(List) ->
-  maximumT(List, -100000).
+maximumT([H|T]) ->
+  maximumT(T, H).
 
 maximumT([], Max) ->
   Max;
@@ -33,8 +32,8 @@ maximumT([H|T], Max) ->
   maximumT(T, NewMax).
 
 
-maximum([]) ->
-  -100000;
+maximum([H]) ->
+  H;
 
 maximum([H|T]) ->
   max(maximum(T), H).

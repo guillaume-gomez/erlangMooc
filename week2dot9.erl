@@ -29,6 +29,9 @@ evensT(List) ->
   evensT(List, []).
 
 
+% in this pattern, the list entered in terminal clause with a reverse list
+% if a reverse the second clause as  "evensT(T, [List| H]);". I have a list like this [ [ [ [], 2],4],8]
+
 evensT([], List) ->
   lists:reverse(List);
 

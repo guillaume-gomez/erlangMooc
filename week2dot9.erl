@@ -1,5 +1,5 @@
 -module(week2dot9).
--export([double/1, evens/1]).
+-export([double/1, evens/1, evensT/1]).
 
 % Transforming list elements
 % Define an Erlang function double/1 to double the elements of a list of numbers.
@@ -23,3 +23,17 @@ evens([H | T]) when H rem 2 == 0 ->
 
 evens([_H| T]) ->
   evens(T).
+
+
+evensT(List) ->
+  evensT(List, []).
+
+
+evensT([], List) ->
+  lists:reverse(List);
+
+evensT([H | T], List) when H rem 2 == 0 ->
+  evensT(T, [H | List]);
+
+evensT([_H | T], List) ->
+  evensT(T, List).

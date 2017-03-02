@@ -51,18 +51,18 @@ myLength([_H | T]) ->
 mergeSort(List) ->
   mergeSort(List, , []).
 
-mergeSort([], List) ->
+merge([], List) ->
   List;
 
-mergeSort(List, [], ) ->
+merge(List, [], ) ->
   List;
 
-mergeSort([H1| T1], [H2| T2]) when H1 <= H2 ->
-  [H1, mergeSort( T1 , [H2|T2])];
+merge([H1| T1], [H2| T2]) when H1 <= H2 ->
+  [H1, merge( T1 , [H2|T2])];
 
 
-mergeSort([H1| T1], [H2| T2]) when H1 > H2 ->
-  [H2, mergeSort( T2 , [H1|T1])];
+merge([H1| T1], [H2| T2]) when H1 > H2 ->
+  [H2, merge( T2 , [H1|T1])];
 
 
 

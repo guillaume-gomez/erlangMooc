@@ -78,7 +78,7 @@ merge([H1| T1], [H2| T2]) when H1 > H2 ->
 
 
 median(List) ->
-  median(List, 0, myLength(List)).
+  median(lists:sort(List), 0, myLength(List)).
 
 median([First | _T ], Increment, Length) when Length rem 2 == 1 , Length div 2 == Increment  ->
   First;

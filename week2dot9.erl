@@ -41,13 +41,25 @@ evensT([H | T], List) when H rem 2 == 0 ->
 evensT([_H | T], List) ->
   evensT(T, List).
 
-% the median of a list of numbers: this is the middle element when the list is ordered (if the list is of even length you should average the middle two)
-myLength([]) ->
-  0;
+median(List) ->
+  median(lists:sort(List), 0, myLength(List)).
 
-myLength([_H | T]) ->
-  1 + myLength(T).
+median([First | _T ], Increment, Length) when Length rem 2 == 1 , Length div 2 == Increment  ->
+  First;
 
+median([First, Second | _T ], Increment, Length) when Length rem 2 == 0 , Length div 2 == (Increment + 1)  ->
+  (First + Second) / 2;
+
+median([_h | T], Increment, Length) ->
+  median(T, Increment + 1, Length).
+
+% the modes of a list of numbers: this is a list consisting of the numbers that occur most frequently in the list; if there is is just one, this will be a list with one element only
+
+
+% Tool methods
+
+
+% partially works
 mergeSort([H| []]) ->
   H;
 
@@ -77,17 +89,10 @@ merge([H1| T1], [H2| T2]) when H1 > H2 ->
   [H2, merge( T2 , [H1|T1])].
 
 
-median(List) ->
-  median(lists:sort(List), 0, myLength(List)).
 
-median([First | _T ], Increment, Length) when Length rem 2 == 1 , Length div 2 == Increment  ->
-  First;
+% the median of a list of numbers: this is the middle element when the list is ordered (if the list is of even length you should average the middle two)
+myLength([]) ->
+  0;
 
-median([First, Second | _T ], Increment, Length) when Length rem 2 == 0 , Length div 2 == (Increment + 1)  ->
-  (First + Second) / 2;
-
-median([_h | T], Increment, Length) ->
-  median(T, Increment + 1, Length).
-
-% the modes of a list of numbers: this is a list consisting of the numbers that occur most frequently in the list; if there is is just one, this will be a list with one element only
-
+myLength([_H | T]) ->
+  1 + myLength(T).

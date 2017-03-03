@@ -53,20 +53,34 @@ median([First, Second | _T ], Increment, Length) when Length rem 2 == 0 , Length
 median([_h | T], Increment, Length) ->
   median(T, Increment + 1, Length).
 
-% the modes of a list of numbers: this is a list consisting of the numbers that occur most frequently in the list; if there is is just one, this will be a list with one element only
+% the modes of a list of numbers: this is a list consisting of the numbers that occur most frequently
+% in the list; if there is is just one, this will be a list with one element only
+% modes([H | T]) ->
+%   [H | T] = lists:sort(List),
+%   modes([H | T], H , 0).
 
+
+% modes([H | T], H, Increment) ->
+%   modes(T, H, Increment + 1);
+
+% modes([_H | T], CurrentValue, Increment) ->
+
+
+% modes([], _CurrentValue, _Increment) ->
+%   1.
 
 % Tool methods
 
 
 % partially works
-mergeSort([H| []]) ->
-  H;
+mergeSort([]) ->
+  [];
+
+mergeSort([H]) ->
+  [H];
 
 mergeSort(List) when is_list(List) ->
-  Middle = myLength(List) div 2,
-  Array1 = lists:sublist(List, Middle),
-  Array2 = lists:sublist(List, Middle+1, Middle+1),
+  {Array1, Array2} = lists:split(trunc(myLength(List)/2), List),
   merge(mergeSort(Array1), mergeSort(Array2)).
 
 merge([], List) ->
@@ -75,22 +89,17 @@ merge([], List) ->
 merge(List, []) ->
   List;
 
-merge(Val1, Val2) when Val1 =< Val2 ->
-  [Val1, Val2];
-
-merge(Val1, Val2) when Val1 > Val2 ->
-  [Val2, Val1];
-
 merge([H1| T1], [H2| T2]) when H1 =< H2 ->
-  [H1, merge( T1 , [H2|T2])];
+  [H1| merge( T1 , [H2|T2])];
 
 
 merge([H1| T1], [H2| T2]) when H1 > H2 ->
-  [H2, merge( T2 , [H1|T1])].
+  [H2 | merge( T2 , [H1|T1])].
 
 
 
-% the median of a list of numbers: this is the middle element when the list is ordered (if the list is of even length you should average the middle two)
+% the median of a list of numbers: this is the middle element when the list is ordered (if the list
+% is of even length you should average the middle two)
 myLength([]) ->
   0;
 

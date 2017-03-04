@@ -1,11 +1,10 @@
 -module(week2).
--export([get_file_contents/1,show_file_contents/1, parse/1, count_word/2, split_words/1]).
+-export([get_file_contents/1,show_file_contents/1, parse/1, count_word/2, split_words/1, nopunct/1]).
 
 % Used to read a file into a list of lines.
 % Example files available in:
 %   gettysburg-address.txt (short)
 %   dickens-christmas.txt  (long)
-
 
 % Get the contents of a text file into a list of lines.
 % Each line has its trailing newline removed.
@@ -39,8 +38,7 @@ show_file_contents([L|Ls]) ->
 parse(Filename) ->
   Content = get_file_contents(Filename),
   ContentParsed = split_words(Content),
-  io:format("~p~n",ContentParsed),
-  count_word("Lorem", ContentParsed).
+  io:format("~p~n",ContentParsed).
 
 % count_word(String, Content)
 count_word(Word, Content) ->
@@ -61,9 +59,8 @@ split_word([]) ->
 split_word(Content) ->
   split_word(Content, []).
 
-% 32 = space
 split_word([H| T], List) ->
-  case lists:member(H,[32]) of
+  case lists:member(H," ") of
     true -> {lists:reverse(List), T};
     false -> split_word(T, [H | List])
   end;
@@ -76,6 +73,16 @@ split_words([]) ->
 
 split_words(Content) ->
   {Word, Remain} = split_word(Content),
-  [Word |  split_words(Remain)].
+  [nopunct(Word) |  split_words(Remain)].
 
+
+% Method from  week 2.15
+nopunct([]) ->
+  [];
+
+nopunct([H| T]) ->
+  case lists:member(H, " .,\;:\t\n") of
+    false -> [H | nopunct(T)];
+    true -> nopunct(T)
+  end.
 

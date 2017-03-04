@@ -39,6 +39,7 @@ parse(Filename) ->
   Content = get_file_contents("gettysburg-address.txt"), %get_file_contents(Filename),
   parse_line(Content).
 
+
 parse_line([]) ->
   [];
 
@@ -58,6 +59,7 @@ count_word(Word, [Word| T], Count) ->
 count_word(Word, [_H| T], Count) ->
   count_word(Word, T, Count).
 
+% Split each word in each line
 split_word([]) ->
   [];
 
@@ -78,8 +80,23 @@ split_words([]) ->
 
 split_words(Content) ->
   {Word, Remain} = split_word(Content),
-  [nopunct(Word) |  split_words(Remain)].
+  Result = limit_split(nopunct(Word), 3),
+  clean_list([ Result| split_words(Remain)]).
 
+limit_split(Word, Size) when length(Word) > Size ->
+  Word;
+
+limit_split(_Word, _Size) ->
+  "".
+
+clean_list([[]| T]) ->
+  clean_list(T);
+
+clean_list([H| T]) ->
+  [ H | clean_list(T)];
+
+clean_list([]) ->
+  [].
 
 % Method from  week 2.15
 nopunct([]) ->

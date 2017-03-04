@@ -1,5 +1,5 @@
 -module(week2).
--export([get_file_contents/1,show_file_contents/1, parse/1, count_word/2, split_words/1, nopunct/1]).
+-export([get_file_contents/1,show_file_contents/1, parse/1, count_word/2, split_words/1, nopunct/1, count_occurence_in_text/2]).
 
 % Used to read a file into a list of lines.
 % Example files available in:
@@ -37,7 +37,8 @@ show_file_contents([L|Ls]) ->
 %% My personnal work %%
 parse(Filename) ->
   Content = get_file_contents("gettysburg-address.txt"), %get_file_contents(Filename),
-  parse_line(Content).
+  Words = parse_line(Content),
+  create_indexes(Words).
 
 
 parse_line([]) ->
@@ -46,9 +47,9 @@ parse_line([]) ->
 parse_line([H|T]) ->
   [split_words(H)| parse_line(T)].
 
-% count_word(String, Content)
-count_word(Word, Content) ->
-  count_word(Word, Content, 1).
+% count_word(String, Line)
+count_word(Word, Line) ->
+  count_word(Word, Line, 1).
 
 count_word(_, [], Count) ->
   Count;
@@ -78,9 +79,10 @@ split_word([], List) ->
 split_words([]) ->
   [];
 
+% change 2 by 3
 split_words(Content) ->
   {Word, Remain} = split_word(Content),
-  Result = limit_split(nopunct(Word), 3),
+  Result = limit_split(nopunct(Word), 6),
   clean_list([ Result| split_words(Remain)]).
 
 limit_split(Word, Size) when length(Word) > Size ->
@@ -103,8 +105,37 @@ nopunct([]) ->
   [];
 
 nopunct([H| T]) ->
-  case lists:member(H, " .,\;:\t\n") of
+  case lists:member(H, " .,\;\\:\t\n") of
     false -> [H | nopunct(T)];
     true -> nopunct(T)
   end.
 
+count_occurence_in_text(Content, Word) ->
+  count_occurence_in_text(Content, 1, Word).
+
+count_occurence_in_text([H|T], LineCount, Word) ->
+  case count_word(Word, H) of
+    1 -> count_occurence_in_text(T, LineCount + 1, Word);
+    _ -> [LineCount | count_occurence_in_text(T, LineCount + 1, Word)]
+  end;
+
+count_occurence_in_text([], _LineCount, Word) ->
+  [].
+
+create_index(Word, Occurences) ->
+  {Word, Occurences}.
+
+create_indexes_by_line([], _Content) ->
+  [];
+
+create_indexes_by_line([H|T], Content) ->
+  [create_index(H, count_occurence_in_text(Content, H)) | create_indexes_by_line(T, Content)].
+
+create_indexes(Content) ->
+  create_indexes(Content, Content).
+
+create_indexes([], _) ->
+  [];
+
+create_indexes([H|T], Content) ->
+  [create_indexes_by_line(H, Content) |create_indexes(T, Content)].

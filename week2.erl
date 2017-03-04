@@ -38,7 +38,7 @@ show_file_contents([L|Ls]) ->
 parse(Filename) ->
   Content = get_file_contents("gettysburg-address.txt"), %get_file_contents(Filename),
   Words = parse_line(Content),
-  create_indexes(Words).
+  lists:flatten(create_indexes(Words)).
 
 
 parse_line([]) ->

@@ -38,8 +38,7 @@ show_file_contents([L|Ls]) ->
 parse(Filename) ->
   Content = get_file_contents("gettysburg-address.txt"), %get_file_contents(Filename),
   Words = parse_line(Content),
-  lists:flatten(create_indexes(Words)).
-
+  Result = nub(lists:flatten(create_indexes(Words))).
 
 parse_line([]) ->
   [];
@@ -110,6 +109,23 @@ nopunct([H| T]) ->
     true -> nopunct(T)
   end.
 
+% Method from week 2.13
+nub([]) ->
+  [];
+
+nub([H|T]) ->
+  [H|removeAll(T, H)].
+
+removeAll([H|T], Comparared)  when H =/= Comparared ->
+  nub([H|T]);
+
+removeAll([H|T], H) ->
+  removeAll(T, H);
+
+removeAll([], _Comparared) ->
+  [].
+
+
 count_occurence_in_text(Content, Word) ->
   count_occurence_in_text(Content, 1, Word).
 
@@ -121,6 +137,15 @@ count_occurence_in_text([H|T], LineCount, Word) ->
 
 count_occurence_in_text([], _LineCount, Word) ->
   [].
+
+% clean_occurence([H]) ->
+%   H;
+
+% clean_occurence([H1, H2 | T]) ->
+%   case (H1 + 1) == H2 of
+%     true -> {H1, clean_occurence([H2 | T]))}
+%     false -> [{H1,H1}, clean_occurence([H2 | T])]
+%   end.
 
 create_index(Word, Occurences) ->
   {Word, Occurences}.
@@ -139,3 +164,4 @@ create_indexes([], _) ->
 
 create_indexes([H|T], Content) ->
   [create_indexes_by_line(H, Content) |create_indexes(T, Content)].
+

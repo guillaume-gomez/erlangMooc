@@ -34,11 +34,16 @@ show_file_contents([L|Ls]) ->
  show_file_contents([]) ->
     ok.
 
-%% My Answer %%
+%% My personnal work %%
 parse(Filename) ->
-  Content = get_file_contents(Filename),
-  ContentParsed = split_words(Content),
-  io:format("~p~n",ContentParsed).
+  Content = get_file_contents("gettysburg-address.txt"), %get_file_contents(Filename),
+  parse_line(Content).
+
+parse_line([]) ->
+  [];
+
+parse_line([H|T]) ->
+  [split_words(H)| parse_line(T)].
 
 % count_word(String, Content)
 count_word(Word, Content) ->

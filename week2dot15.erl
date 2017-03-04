@@ -1,5 +1,5 @@
 -module(week2dot15).
--export([palin/1, palindrome/1, lastoccurence/1, nocaps/1, nopunct/1]).
+-export([palin/1, palindrome/1]).
 %-spec palindrome([List]) -> boolean().
 
 palindrome(List) ->

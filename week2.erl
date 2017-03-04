@@ -1,5 +1,5 @@
 -module(week2).
--export([get_file_contents/1,show_file_contents/1, parse/1, split_words/1]).
+-export([get_file_contents/1,show_file_contents/1, parse/1, count_word/2, split_words/1]).
 
 % Used to read a file into a list of lines.
 % Example files available in:
@@ -37,13 +37,14 @@ show_file_contents([L|Ls]) ->
 
 %% My Answer %%
 parse(Filename) ->
-  [Hy| Content] = get_file_contents(Filename),
-  io:format("~s~n",[Hy]),
-  count_word("Lorem", Content).
+  Content = get_file_contents(Filename),
+  ContentParsed = split_words(Content),
+  io:format("~p~n",ContentParsed),
+  count_word("Lorem", ContentParsed).
 
 % count_word(String, Content)
 count_word(Word, Content) ->
-  count_word(Word, Content, 0).
+  count_word(Word, Content, 1).
 
 count_word(_, [], Count) ->
   Count;
@@ -53,7 +54,6 @@ count_word(Word, [Word| T], Count) ->
 
 count_word(Word, [_H| T], Count) ->
   count_word(Word, T, Count).
-
 
 split_word([]) ->
   [];

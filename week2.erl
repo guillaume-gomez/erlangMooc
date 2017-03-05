@@ -125,7 +125,7 @@ nopunct([]) ->
   [];
 
 nopunct([H| T]) ->
-  case lists:member(H, " .,\;\\:\t\n") of
+  case lists:member(H, " .,\;\\:\t\n('!?") of
     false -> [H | nopunct(T)];
     true -> nopunct(T)
   end.
@@ -176,9 +176,7 @@ count_occurence_in_text([H|T], LineCount, Word) ->
       [LineCount | count_occurence_in_text(T, LineCount + 1, Word)]
   end.
 
-% concert the previous array as expected array
-
-
+% format the previous array as expected array
 format_occurence([]) ->
   [];
 

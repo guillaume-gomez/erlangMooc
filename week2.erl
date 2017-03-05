@@ -1,5 +1,6 @@
 -module(week2).
--export([get_file_contents/1,show_file_contents/1, parse/1, count_word/2, split_words/1, nopunct/1, count_occurence_in_text/2]).
+-compile(export_all).
+%-export([get_file_contents/1, parse/1]).
 
 % Used to read a file into a list of lines.
 % Example files available in:
@@ -36,12 +37,26 @@ show_file_contents([L|Ls]) ->
 
 
 %% My personnal work %%
+display_indexes([]) ->
+  ok;
+
+display_indexes([H|T]) ->
+  io:format("~p~n",[H]),
+  display_indexes(T).
+
 
 % parse the file passed as parameter%
 parse(Filename) ->
+  parse(Filename, false).
+
+parse(Filename, GetData) ->
   Content = get_file_contents("gettysburg-address.txt"), %get_file_contents(Filename),
   Words = parse_line(Content),
-  Result = nub(lists:flatten(create_indexes(Words))).
+  Result = nub(lists:flatten(create_indexes(Words))),
+  case GetData of
+    false -> display_indexes(Result);
+    true  -> Result
+  end.
 
 
 parse_line([]) ->
@@ -86,7 +101,7 @@ split_words([]) ->
 % change 4 by 3
 split_words(Content) ->
   {Word, Remain} = split_word(Content),
-  Result = limit_split(nocaps(nopunct(Word)), 7),
+  Result = limit_split(nocaps(nopunct(Word)), 5),
   clean_list([ Result| split_words(Remain)]).
 
 %  remove in split_words words of length less than Size
@@ -188,7 +203,7 @@ create_indexes_by_line([], _Content) ->
   [];
 
 create_indexes_by_line([H|T], Content) ->
-  [create_index(H, count_occurence_in_text(Content, H)) | create_indexes_by_line(T, Content)].
+  [create_index(H, format_occurence(count_occurence_in_text(Content, H))) | create_indexes_by_line(T, Content)].
 
 create_indexes(Content) ->
   create_indexes(Content, Content).

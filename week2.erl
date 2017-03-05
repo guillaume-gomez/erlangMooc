@@ -50,12 +50,12 @@ parse(Filename) ->
   parse(Filename, false).
 
 parse(Filename, GetData) ->
-  Content = get_file_contents("gettysburg-address.txt"), %get_file_contents(Filename),
+  Content = get_file_contents("dickens-christmas.txt"), %get_file_contents(Filename),
   Words = parse_line(Content),
   Result = nub(lists:flatten(create_indexes(Words))),
   case GetData of
-    false -> display_indexes(Result);
-    true  -> Result
+    false -> display_indexes(mySort(Result));
+    true  -> mySort(Result)
   end.
 
 
@@ -213,4 +213,12 @@ create_indexes([], _) ->
 
 create_indexes([H|T], Content) ->
   [create_indexes_by_line(H, Content) |create_indexes(T, Content)].
+
+
+% sort alphabetically result of parse
+mySort(List) ->
+  Func = fun({Word1, _}, {Word2, _}) ->
+    Word1 < Word2
+  end,
+  lists:sort(Func, List).
 

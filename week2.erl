@@ -1,7 +1,7 @@
 -module(week2).
 %uncomment this command if you want to test each function separately
--compile(export_all).
-%-export([get_file_contents/1, parse/1]).
+%-compile(export_all).
+-export([get_file_contents/1, parse/1]).
 
 % Used to read a file into a list of lines.
 % Example files available in:
@@ -58,7 +58,7 @@ parse(Filename) ->
   parse(Filename, false).
 
 parse(Filename, GetData) ->
-  Content = get_file_contents("dickens-christmas.txt"), %get_file_contents(Filename),
+  Content = get_file_contents(Filename),
   WordsByLines = parse_line(Content),
   Words = nub(lists:merge(WordsByLines)),
   Result = create_indexes(Words, WordsByLines),
@@ -201,7 +201,7 @@ remove_all([H|T], Compared) ->
 count_occurence_in_text(Content, Word) ->
   count_occurence_in_text(Content, 1, Word).
 
-count_occurence_in_text([], LineCount, Word) ->
+count_occurence_in_text([], _LineCount, _Word) ->
   [];
 
 count_occurence_in_text([H|T], LineCount, Word) ->
@@ -271,8 +271,43 @@ mySort(List) ->
 %
 
 
+% Work not finished
+% 
 
-% Questions %
+% make_singular(Word) ->
+%   make_singular(Word, 1).
+
+% make_singular([], _) ->
+%   [];
+
+% make_singular(Word, 1) when length(Word) > 1 ->
+%   case string:sub_string(Word, length(Word)) == "s" of
+%     true -> string:sub_string(Word, 1,length(Word) - 1);
+%     false -> make_singular(Word, 2)
+%   end;
+
+% %  If a word ends with -ies, I replace the ending with -y
+% make_singular(Word, 2) when length(Word) > 3 ->
+%   case string:sub_string(Word, length(Word) - 2) == "ies" of
+%     true -> string:concat(string:sub_string(Word, 1, length(Word) - 3), "y");
+%     false -> make_singular(Word, 3)
+%   end;
+
+% %  If a word ends with -es, I remove this ending.
+% make_singular(Word, 3) when length(Word) > 2 ->
+%   case string:sub_string(Word, 1,length(Word) - 1) of
+%     true -> string:sub_string(Word, length(Word) - 2) == "es";
+%     false -> make_singular(Word, 4)
+%   end;
+
+% make_singular(Word, 4) ->
+%   Word.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+           % Questions %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % (Harder) Thinking how you could make the data representation more efficient than the one you first chose. This might be efficient for lookup only, or for both creation and lookup.
 
 % The data could contain the frequency of each word, and sort them alphabetically and by their frequency.

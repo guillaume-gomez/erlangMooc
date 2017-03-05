@@ -101,7 +101,7 @@ split_words([]) ->
 % change 4 by 3
 split_words(Content) ->
   {Word, Remain} = split_word(Content),
-  Result = limit_split(nocaps(nopunct(Word)), 5),
+  Result = limit_split(nocaps(nopunct(Word)), 3),
   clean_list([ Result| split_words(Remain)]).
 
 %  remove in split_words words of length less than Size

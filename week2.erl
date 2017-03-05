@@ -39,6 +39,11 @@ show_file_contents([L|Ls]) ->
 
 %% My personnal work %%
 
+% How to use
+% week2:parse("file_name").
+%
+
+
 % display the output %
 display_indexes([]) ->
   ok;
@@ -53,7 +58,7 @@ parse(Filename) ->
   parse(Filename, false).
 
 parse(Filename, GetData) ->
-  Content = get_file_contents("mytest.txt"), %get_file_contents(Filename),
+  Content = get_file_contents("dickens-christmas.txt"), %get_file_contents(Filename),
   WordsByLines = parse_line(Content),
   Words = nub(lists:merge(WordsByLines)),
   Result = create_indexes(Words, WordsByLines),
@@ -242,7 +247,6 @@ create_indexes([], _) ->
   [];
 
 create_indexes([H|T], Content) ->
-  io:format("~p~n", [Content]),
   [create_index(H, format_occurence(count_occurence_in_text(Content, H))) |create_indexes(T, Content)].
 
 % Example
@@ -265,3 +269,25 @@ mySort(List) ->
  % {"lorem",[{1,1},{3,4}]}]
 %]
 %
+
+
+
+% Questions %
+% (Harder) Thinking how you could make the data representation more efficient than the one you first chose. This might be efficient for lookup only, or for both creation and lookup.
+
+% The data could contain the frequency of each word, and sort them alphabetically and by their frequency.
+% So the most commonly used words in the text will appear at the top of the list.
+% However some words should be deleted because they don't give any information about the text.
+% For instance, words like "the", "of", "however", "then"  could be blacklisted.(the and of are already delete in the algorithm)
+% To conclude, The program could check if the current word is present in a blacklisted list, if so  it wouldn't be taken into account.
+
+
+%Can you think of other ways that you might extend your solution? %
+
+% The output could be exported in a file(that is why I added a parameter to choose if the parsed result would be the data itself or a formated string).
+% The index doesn't give a "meaning" of the text. It could be interesting to give some "key" words calculated by their frequency or their position in the text
+% (if the text is an article, headline words could help to understand the text).
+
+
+
+

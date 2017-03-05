@@ -34,11 +34,15 @@ show_file_contents([L|Ls]) ->
  show_file_contents([]) ->
     ok.
 
+
 %% My personnal work %%
+
+% parse the file passed as parameter%
 parse(Filename) ->
   Content = get_file_contents("gettysburg-address.txt"), %get_file_contents(Filename),
   Words = parse_line(Content),
   Result = nub(lists:flatten(create_indexes(Words))).
+
 
 parse_line([]) ->
   [];
@@ -46,7 +50,8 @@ parse_line([]) ->
 parse_line([H|T]) ->
   [split_words(H)| parse_line(T)].
 
-% count_word(String, Line)
+
+% count the number of occurence of the 'Word' in a line
 count_word(Word, Line) ->
   count_word(Word, Line, 1).
 
@@ -78,12 +83,13 @@ split_word([], List) ->
 split_words([]) ->
   [];
 
-% change 2 by 3
+% change 4 by 3
 split_words(Content) ->
   {Word, Remain} = split_word(Content),
-  Result = limit_split(nopunct(Word), 6),
+  Result = limit_split(nocaps(nopunct(Word)), 7),
   clean_list([ Result| split_words(Remain)]).
 
+%  remove in split_words words of length less than Size
 limit_split(Word, Size) when length(Word) > Size ->
   Word;
 

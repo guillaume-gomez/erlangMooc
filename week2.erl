@@ -51,20 +51,19 @@ parse(Filename) ->
 
 parse(Filename, GetData) ->
   Content = get_file_contents("dickens-christmas.txt"), %get_file_contents(Filename),
-  Words = parse_line(Content),
-  Result = nub(lists:flatten(create_indexes(Words))),
+  WordsByLines = parse_line(Content),
+  Words = nub(lists:merge(WordsByLines)),
+  Result = create_indexes(Words, WordsByLines),
   case GetData of
-    false -> display_indexes(mySort(Result));
-    true  -> mySort(Result)
-  end.
-
+     false -> display_indexes(mySort(Result));
+     true  -> mySort(Result)
+   end.
 
 parse_line([]) ->
   [];
 
 parse_line([H|T]) ->
   [split_words(H)| parse_line(T)].
-
 
 % count the number of occurence of the 'Word' in a line
 count_word(Word, Line) ->
@@ -197,20 +196,11 @@ format_occurence(Begin, Compared, [H|T]) ->
 create_index(Word, Occurences) ->
   {Word, Occurences}.
 
-create_indexes_by_line([], _Content) ->
-  [];
-
-create_indexes_by_line([H|T], Content) ->
-  [create_index(H, format_occurence(count_occurence_in_text(Content, H))) | create_indexes_by_line(T, Content)].
-
-create_indexes(Content) ->
-  create_indexes(Content, Content).
-
 create_indexes([], _) ->
   [];
 
 create_indexes([H|T], Content) ->
-  [create_indexes_by_line(H, Content) |create_indexes(T, Content)].
+  [create_index(H, format_occurence(count_occurence_in_text(Content, H))) |create_indexes(T, Content)].
 
 
 % sort alphabetically result of parse

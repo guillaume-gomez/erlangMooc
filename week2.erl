@@ -1,4 +1,5 @@
 -module(week2).
+%uncomment this command if you want to test each function separately
 -compile(export_all).
 %-export([get_file_contents/1, parse/1]).
 
@@ -37,6 +38,8 @@ show_file_contents([L|Ls]) ->
 
 
 %% My personnal work %%
+
+% display the output %
 display_indexes([]) ->
   ok;
 
@@ -50,7 +53,7 @@ parse(Filename) ->
   parse(Filename, false).
 
 parse(Filename, GetData) ->
-  Content = get_file_contents("dickens-christmas.txt"), %get_file_contents(Filename),
+  Content = get_file_contents("mytest.txt"), %get_file_contents(Filename),
   WordsByLines = parse_line(Content),
   Words = nub(lists:merge(WordsByLines)),
   Result = create_indexes(Words, WordsByLines),
@@ -65,9 +68,13 @@ parse_line([]) ->
 parse_line([H|T]) ->
   [split_words(H)| parse_line(T)].
 
+% Example
+% week2:parse_line(["First line of the text.", "Second line","Conclusion"]).
+%-> [["first","line","text"],["second","line"],["conclusion"]]
+
 % count the number of occurence of the 'Word' in a line
 count_word(Word, Line) ->
-  count_word(Word, Line, 1).
+  count_word(Word, Line, 0).
 
 count_word(_, [], Count) ->
   Count;
@@ -77,6 +84,13 @@ count_word(Word, [Word| T], Count) ->
 
 count_word(Word, [_H| T], Count) ->
   count_word(Word, T, Count).
+
+% Example
+% week2:count_word("foo", ["This", "is", "an", "example", "of", "foo", "count_word.", "foo", "foo"]).
+% 3
+% week2:count_word("foobar", ["This", "is", "an", "example", "of", "foo", "count_word.", "foo", "foo"]).
+% 0
+%%%
 
 % Split each word in each line
 split_word([]) ->
@@ -94,6 +108,10 @@ split_word([H| T], List) ->
 split_word([], List) ->
   {lists:reverse(List), []}.
 
+% Example
+% week2:split_word("Lorem Ipsum is simply dummy text of the printing and typesetting industry.").
+%{"Lorem", "Ipsum is simply dummy text of the printing and typesetting industry."}
+
 split_words([]) ->
   [];
 
@@ -103,12 +121,26 @@ split_words(Content) ->
   Result = limit_split(nocaps(nopunct(Word)), 3),
   clean_list([ Result| split_words(Remain)]).
 
+% Example
+% week2:split_words("Lorem Ipsum is simply dummy text of the printing and typesetting industry.").
+% ["lorem","ipsum","simply","dummy","text","printing", "typesetting","industry"]
+%
+
 %  remove in split_words words of length less than Size
-limit_split(Word, Size) when length(Word) > Size ->
+limit_split(Word, Size) when length(Word) >= Size ->
   Word;
 
 limit_split(_Word, _Size) ->
   "".
+
+% Example
+% week2:limit_split("jjj",3).
+% "jjj"
+% week2:limit_split("jjjj",3).
+% "jjjj"
+% week2:limit_split("jj",3).
+% []
+%
 
 clean_list([[]| T]) ->
   clean_list(T);
@@ -124,7 +156,7 @@ nopunct([]) ->
   [];
 
 nopunct([H| T]) ->
-  case lists:member(H, " .,\;\\:\t\n('!?)") of
+  case lists:member(H, " .,\;\\:\t\n`\"('!?)") of
     false -> [H | nopunct(T)];
     true -> nopunct(T)
   end.
@@ -169,11 +201,16 @@ count_occurence_in_text([], LineCount, Word) ->
 
 count_occurence_in_text([H|T], LineCount, Word) ->
   case count_word(Word, H) of
-    1 ->
+    0 ->
       count_occurence_in_text(T, LineCount + 1, Word);
     _ ->
       [LineCount | count_occurence_in_text(T, LineCount + 1, Word)]
   end.
+
+% Example
+% week2:count_occurence_in_text([["lorem","ipsum","simply","dummy","text"],["lorem", "text"], [""], ["lorem"]], "lorem").
+% [1,2,4]
+%
 
 % format the previous array as expected array
 format_occurence([]) ->
@@ -192,6 +229,11 @@ format_occurence(Begin, Compared, [H|T]) ->
     false -> [{Begin, Compared} | format_occurence(H, H, T)]
   end.
 
+% Example
+% week2:format_occurence([1,2,4]).
+% [{1,2},{4,4}]
+%
+
 % create an index in the parsing function
 create_index(Word, Occurences) ->
   {Word, Occurences}.
@@ -200,8 +242,13 @@ create_indexes([], _) ->
   [];
 
 create_indexes([H|T], Content) ->
+  io:format("~p~n", [Content]),
   [create_index(H, format_occurence(count_occurence_in_text(Content, H))) |create_indexes(T, Content)].
 
+% Example
+% week2:create_indexes(["lorem"], [["lorem", "ipsum"],[""], ["lorem", "again"], ["lorem"]]).
+% [{"lorem",[{1,1},{3,4}]}]
+%
 
 % sort alphabetically result of parse
 mySort(List) ->
@@ -210,3 +257,11 @@ mySort(List) ->
   end,
   lists:sort(Func, List).
 
+% Example
+% week2:mySort([{"lorem",[{1,1},{3,4}]}, {"ispum",[{1,1},{3,4}]}, {"and",[{1,1},{3,4}]} ]).
+% [
+ % {"and",[{1,1},{3,4}]},
+ % {"ispum",[{1,1},{3,4}]},
+ % {"lorem",[{1,1},{3,4}]}]
+%]
+%

@@ -115,44 +115,72 @@ nopunct([H| T]) ->
     true -> nopunct(T)
   end.
 
+nocaps([]) ->
+  [];
+
+nocaps([H|T]) ->
+  [nocap(H) | nocaps(T)].
+
+nocap(X) ->
+  case $A =< X andalso X =< $Z of
+    true -> X+32;
+    false -> X
+  end.
+
+
 % Method from week 2.13
 nub([]) ->
   [];
 
 nub([H|T]) ->
-  [H|removeAll(T, H)].
+  [H|nub(remove_all(T, H))].
 
-removeAll([H|T], Comparared)  when H =/= Comparared ->
-  nub([H|T]);
+remove_all([], _Compared) ->
+  [];
 
-removeAll([H|T], H) ->
-  removeAll(T, H);
+remove_all([H|T], H) ->
+  remove_all(T, H);
 
-removeAll([], _Comparared) ->
-  [].
+remove_all([H|T], Compared) ->
+  [H | remove_all(T, Compared)].
 
+
+% Create an array with the lines where the word occurs.
 
 count_occurence_in_text(Content, Word) ->
   count_occurence_in_text(Content, 1, Word).
 
+count_occurence_in_text([], LineCount, Word) ->
+  [];
+
 count_occurence_in_text([H|T], LineCount, Word) ->
   case count_word(Word, H) of
-    1 -> count_occurence_in_text(T, LineCount + 1, Word);
-    _ -> [LineCount | count_occurence_in_text(T, LineCount + 1, Word)]
-  end;
+    1 ->
+      count_occurence_in_text(T, LineCount + 1, Word);
+    _ ->
+      [LineCount | count_occurence_in_text(T, LineCount + 1, Word)]
+  end.
 
-count_occurence_in_text([], _LineCount, Word) ->
-  [].
+% concert the previous array as expected array
 
-% clean_occurence([H]) ->
-%   H;
 
-% clean_occurence([H1, H2 | T]) ->
-%   case (H1 + 1) == H2 of
-%     true -> {H1, clean_occurence([H2 | T]))}
-%     false -> [{H1,H1}, clean_occurence([H2 | T])]
-%   end.
+format_occurence([]) ->
+  [];
 
+format_occurence([H|T]) ->
+  format_occurence(H, H, T).
+
+
+format_occurence(Begin, Compared, []) ->
+  [{Begin, Compared}];
+
+format_occurence(Begin, Compared, [H|T]) ->
+  case Compared + 1 == H of
+    true -> format_occurence(Begin, H, T);
+    false -> [{Begin, Compared} | format_occurence(H, H, T)]
+  end.
+
+% create an index in the parsing function
 create_index(Word, Occurences) ->
   {Word, Occurences}.
 

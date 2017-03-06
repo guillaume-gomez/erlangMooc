@@ -72,7 +72,6 @@ median([_h | T], Increment, Length) ->
 % Tool methods
 
 
-% partially works
 mergeSort([]) ->
   [];
 

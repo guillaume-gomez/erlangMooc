@@ -1,5 +1,5 @@
 -module(rock_paper_scissors).
--export([beat/1, lose/1, result/2, tournament/2]).
+-export([beat/1, lose/1, result/2, tournament/2, play/1]).
 
 -spec beat(atom()) -> atom().
 -spec lose(atom()) -> atom().
@@ -85,3 +85,59 @@ result_and_outcome(Move1, Move2) ->
 add(H, Acc) ->
   H + Acc.
 
+
+% Strategies from the live coding 
+
+echo([]) ->
+  paper;
+
+echo([Last | _]) ->
+  Last.
+
+rock(_) ->
+  rock.
+
+no_repeat([]) ->
+  scissors;
+
+no_repeat([H | _]) ->
+  beat(H).
+
+const(Play) ->
+  fun(_) -> Play end.
+
+cycle(List) ->
+  val(length(List) rem 3).
+
+rand(_) ->
+  val(random:uniform(3) - 1).
+
+%
+% Interactively play against a strategy, provided as argument
+%
+
+play(Strategy) ->
+  io:format("Rock - Paper - Scissors ~n"),
+  io:format("Play one of rock, paper, scissors; ... ~n"),
+  io:format("... r, p, s, stop, followed by '.' ~n"),
+  play(Strategy,[]).
+
+
+play(Strategy, Moves) ->
+  {ok, P} = io:read("Play: "),
+  Play = expand(P),
+  case Play of
+    stop ->
+      io:format("Stopped~n");
+    _ ->
+      Result = result(Play, Strategy(Moves)),
+      io:format("Result: ~p~n", [Result]),
+      play(Strategy,[Play|Moves])
+  end.
+
+expand("stop") -> stop;
+expand("draw") -> draw;
+expand("win") -> win;
+expand("lose") -> lose;
+expand(Try) -> io:format("Result: ~p~n", [Try]),
+      stop.

@@ -31,3 +31,15 @@ prod(X, Acc) ->
 
 % week3dot5:product([1,2,3,4]).
 % 24
+
+% a) Define a function zip/2 that “zips together” pairs of elements from two lists like this:
+
+% zip([1,3,5,7], [2,4]) = [ {1,2}, {3,4} ]
+% where you can see that the elements from the longer list are lost.
+
+% b) Define a function zip_with/3 that “zips together” pairs of elements from two lists using the function in the first argument, like this:
+
+% zip_with(fun(X,Y) -> X+Y end, [1,3,5,7], [2,4]) = [ 3, 7 ]
+% c) Re-define the function zip_with/3 using zip and lists:map.
+
+% d) Re-define zip/2 using zip_with/3.

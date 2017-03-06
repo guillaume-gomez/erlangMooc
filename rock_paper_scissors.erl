@@ -3,7 +3,7 @@
 
 -spec beat(atom()) -> atom().
 -spec lose(atom()) -> atom().
--spec convert(atom()) -> atom().
+-spec outcome(atom()) -> atom().
 -spec tournament(list(number()), list(number())) -> number().
 
 beat(rock) ->
@@ -41,13 +41,13 @@ result(Move1, Move2) ->
     _ -> lose
   end.
 
-convert(draw) ->
+outcome(draw) ->
   0;
 
-convert(win) ->
+outcome(win) ->
   1;
 
-convert(lose) ->
+outcome(lose) ->
   -1.
 
 
@@ -61,11 +61,11 @@ tournament(List1, List2) ->
   lists:foldr(
     fun add/2,
     0,
-    lists:zipwith(fun result_and_convert/2, List1, List2)
+    lists:zipwith(fun result_and_outcome/2, List1, List2)
   ).
 
-result_and_convert(Move1, Move2) ->
-  convert(result(Move1, Move2)).
+result_and_outcome(Move1, Move2) ->
+  outcome(result(Move1, Move2)).
 
 add(H, Acc) ->
   H + Acc.

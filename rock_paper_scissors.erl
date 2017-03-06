@@ -6,6 +6,8 @@
 -spec outcome(atom()) -> atom().
 -spec tournament(list(number()), list(number())) -> number().
 
+% Give the play which the arguments beats 
+
 beat(rock) ->
   paper;
 
@@ -18,6 +20,7 @@ beat(scissors) ->
 beat(_) ->
   error.
 
+% Give the play which the arguments loses
 
 lose(rock) ->
   scissors;
@@ -31,6 +34,7 @@ lose(paper) ->
 lose(_) ->
   error.
 
+% Compute the result of a play
 
 result(Move, Move) ->
   draw;
@@ -41,6 +45,7 @@ result(Move1, Move2) ->
     _ -> lose
   end.
 
+% tool function to convert atom into integer and vise versa
 outcome(draw) ->
   0;
 
@@ -50,6 +55,16 @@ outcome(win) ->
 outcome(lose) ->
   -1.
 
+val(0) ->
+  draw;
+
+val(1) ->
+  win;
+
+val(-1) ->
+  lose.
+
+% compute an array of plays
 
 tournament([], _) ->
   0;

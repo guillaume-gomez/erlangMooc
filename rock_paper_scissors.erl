@@ -112,6 +112,21 @@ cycle(List) ->
 rand_(_) ->
   val(rand:uniform(3) - 1).
 
+expand(paper) -> paper;
+expand(p) -> paper;
+
+expand(rock) -> rock;
+expand(r) -> rock;
+
+expand(scissors) -> scissors;
+expand(s) -> scissors;
+
+expand(stop) -> stop;
+
+expand(_) ->
+  io:format("Wrong command ~n"),
+  stop.
+
 %
 % Interactively play against a strategy, provided as argument
 %
@@ -135,17 +150,6 @@ play(Strategy, Moves) ->
       play(Strategy,[Play|Moves])
   end.
 
-expand(paper) -> paper;
-expand(p) -> paper;
-
-expand(rock) -> rock;
-expand(r) -> rock;
-
-expand(scissors) -> scissors;
-expand(s) -> scissors;
-
-expand(stop) -> stop;
-
-expand(_) ->
-  io:format("Wrong command ~n"),
-  stop.
+% Example
+%rock_paper_scissors:play(fun () -> rock end)
+%

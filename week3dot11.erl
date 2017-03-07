@@ -1,5 +1,5 @@
--module(hof).
--export([add/1,times/1,compose/2,id/1,iterate/1]).
+-module(week3dot11).
+-export([add/1,times/1,compose/2,id/1,iterate/1, sub/1]).
 
 %%
 % In the shell exercice
@@ -54,6 +54,22 @@ iterate(N) ->
     dummy.
 
 
+sub(X) ->
+  fun(Y) -> X - Y end.
+
 %%
 % My work
 %%
+
+% Non commutative
+% S = week3dot11:compose(week3dot11:sub(7), week3dot11:sub(5)).
+% S(3). = 1
+% A = week3dot11:compose(week3dot11:sub(5), week3dot11:sub(7)).
+% A(3). = 5
+
+
+% Commutative
+% A = week3dot11:compose(week3dot11:add(5), week3dot11:add(7)).
+% A(3). = 15
+% S = week3dot11:compose(week3dot11:add(7), week3dot11:add(5))
+% S(3). = 15

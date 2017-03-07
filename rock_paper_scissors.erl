@@ -1,12 +1,12 @@
 -module(rock_paper_scissors).
--export([beat/1, lose/1, result/2, tournament/2, play/1]).
+-export([beat/1, lose/1, result/2, tournament/2, play/1, expand/1, rock/1]).
 
 -spec beat(atom()) -> atom().
 -spec lose(atom()) -> atom().
 -spec outcome(atom()) -> atom().
 -spec tournament(list(number()), list(number())) -> number().
 
-% Give the play which the arguments beats 
+% Give the play which the arguments beats
 
 beat(rock) ->
   paper;
@@ -109,8 +109,8 @@ const(Play) ->
 cycle(List) ->
   val(length(List) rem 3).
 
-rand(_) ->
-  val(random:uniform(3) - 1).
+rand_(_) ->
+  val(rand:uniform(3) - 1).
 
 %
 % Interactively play against a strategy, provided as argument
@@ -135,9 +135,17 @@ play(Strategy, Moves) ->
       play(Strategy,[Play|Moves])
   end.
 
-expand("stop") -> stop;
-expand("draw") -> draw;
-expand("win") -> win;
-expand("lose") -> lose;
-expand(Try) -> io:format("Result: ~p~n", [Try]),
-      stop.
+expand(paper) -> paper;
+expand(p) -> paper;
+
+expand(rock) -> rock;
+expand(r) -> rock;
+
+expand(scissors) -> scissors;
+expand(s) -> scissors;
+
+expand(stop) -> stop;
+
+expand(_) ->
+  io:format("Wrong command ~n"),
+  stop.

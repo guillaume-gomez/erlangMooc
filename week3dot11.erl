@@ -1,5 +1,37 @@
 -module(week3dot11).
--export([add/1,times/1,compose/2,id/1,iterate/1, sub/1, composer/1]).
+-export([add/1,times/1,compose/2,id/1,iterate/1, sub/1, composer/1, twice/1, multByThree/0]).
+
+
+%%
+% Code base
+%%
+
+add(X) ->
+    fun(Y) -> X + Y end.
+
+times(X) ->
+    fun(Y) ->
+      X * Y end.
+
+compose(F,G) ->
+    fun(X) -> G(F(X)) end.
+
+id(X) ->
+    X.
+
+iterate(0) ->
+    dummy;
+iterate(_N) ->
+    dummy.
+
+
+sub(X) ->
+  fun(Y) -> X - Y end.
+
+
+%%
+% My work
+%%
 
 %%
 % In the shell exercice
@@ -31,34 +63,11 @@
 % * 1: variable 'Product' is unbound
 
 
-%%
-% Code base
-%%
-
-add(X) ->
-    fun(Y) -> X + Y end.
-
-times(X) ->
-    fun(Y) ->
-      X * Y end.
-
-compose(F,G) ->
-    fun(X) -> G(F(X)) end.
-
-id(X) ->
-    X.
-
-iterate(0) ->
-    dummy;
-iterate(_N) ->
-    dummy.
 
 
-sub(X) ->
-  fun(Y) -> X - Y end.
 
 %%
-% My work
+%% Composition
 %%
 
 % Non commutative
@@ -77,5 +86,52 @@ sub(X) ->
 
 composer([H| T]) ->
   lists:foldr(fun compose/2, H, T).
+
+
+
+% S = week3dot11:composer([week3dot11:add(4), week3dot11:add(6), week3dot11:sub(3)]).
+% S(3).
+% -2
+% D = week3dot11:composer([week3dot11:add(4), week3dot11:add(6)]).
+% D(3).
+% 13
+% D(10).
+% 20
+% S(10).
+% -9
+% R = week3dot11:composer([week3dot11:add(4), week3dot11:sub(6)]).
+% R(3).
+% 7
+
+%%
+%%  Twice
+%%
+
+
+multByThree() ->
+  fun(X) ->  X * 3 end.
+
+twice(F) ->
+  compose(F, F).
+
+% week3dot11:twice(week3dot11:multByThree()).
+% #Fun<week3dot11.2.42111034>
+% X = week3dot11:twice(week3dot11:multByThree()).
+% #Fun<week3dot11.2.42111034>
+%  X(2).
+% 18
+
+
+% C = week3dot11:twice(week3dot11:twice(week3dot11:multByThree())).
+% #Fun<week3dot11.2.42111034>
+% C(2).  = 2 * 3 * 3 * 3 * 3
+% 162
+
+
+%
+% Iteration
+%
+
+
 
 

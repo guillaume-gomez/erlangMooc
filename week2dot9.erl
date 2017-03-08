@@ -1,5 +1,5 @@
 -module(week2dot9).
--export([double/1, evens/1, evensT/1, median/1, myLength/1, mergeSort/1, occur/2, modes/1]).
+-export([double/1, evens/1, evensT/1, median/1, myLength/1, occur/2, modes/1]).
 
 % Transforming list elements
 % Define an Erlang function double/1 to double the elements of a list of numbers.
@@ -91,31 +91,6 @@ remove([H|T], H ) ->
 
 remove([H|T], Val) ->
   [ H | remove(T, Val)].
-
-
-mergeSort([]) ->
-  [];
-
-mergeSort([H]) ->
-  [H];
-
-mergeSort(List) when is_list(List) ->
-  {Array1, Array2} = lists:split(trunc(myLength(List)/2), List),
-  merge(mergeSort(Array1), mergeSort(Array2)).
-
-merge([], List) ->
-  List;
-
-merge(List, []) ->
-  List;
-
-merge([H1| T1], [H2| T2]) when H1 =< H2 ->
-  [H1| merge( T1 , [H2|T2])];
-
-
-merge([H1| T1], [H2| T2]) when H1 > H2 ->
-  [H2 | merge( T2 , [H1|T1])].
-
 
 
 % the median of a list of numbers: this is the middle element when the list is ordered (if the list

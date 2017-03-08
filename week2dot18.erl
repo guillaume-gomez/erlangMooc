@@ -1,5 +1,5 @@
 -module(week2dot18).
--export([say/2, join/1, mergeSort/1]).
+-export([say/2, join/1, mergeSort/1, member/2]).
 
 say([],[]) ->
   [];
@@ -19,7 +19,14 @@ join([]) ->
 join([H |T]) ->
   say(H,join(T)).
 
+member(_, []) ->
+  false;
 
+member(Val, [Val | _T]) ->
+  true;
+
+member(Val, [H| T]) ->
+  member(Val, T).
 
 mergeSort([]) ->
   [];

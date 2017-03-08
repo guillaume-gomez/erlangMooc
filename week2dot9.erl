@@ -1,5 +1,5 @@
 -module(week2dot9).
--export([double/1, evens/1, evensT/1, median/1, myLength/1, mergeSort/1]).
+-export([double/1, evens/1, evensT/1, median/1, myLength/1, mergeSort/1, occur/2, modes/1]).
 
 % Transforming list elements
 % Define an Erlang function double/1 to double the elements of a list of numbers.
@@ -55,21 +55,42 @@ median([_h | T], Increment, Length) ->
 
 % the modes of a list of numbers: this is a list consisting of the numbers that occur most frequently
 % in the list; if there is is just one, this will be a list with one element only
-% modes([H | T]) ->
-%   [H | T] = lists:sort(List),
-%   modes([H | T], H , 0).
+ 
+modes([]) ->
+  [];
+
+modes([H|T]) ->
+  [ occur([H|T], H) | modes(remove(T, H))].
 
 
-% modes([H | T], H, Increment) ->
-%   modes(T, H, Increment + 1);
-
-% modes([_H | T], CurrentValue, Increment) ->
-
-
-% modes([], _CurrentValue, _Increment) ->
-%   1.
+%modes([], _CurrentValue, _Increment) ->
+  % 1.
 
 % Tool methods
+
+occur([], _Val) ->
+  0;
+
+occur(List, Val) ->
+  occur(List, Val, 0).
+
+occur([], _Val, Acc) ->
+  Acc;
+
+occur([H|T], H, Acc) ->
+  occur(T, H, Acc + 1);
+
+occur([H|T], Val, Acc) ->
+  occur(T, Val, Acc).
+
+remove([], _Val) ->
+  [];
+
+remove([H|T], H ) ->
+  remove(T, H);
+
+remove([H|T], Val) ->
+  [ H | remove(T, Val)].
 
 
 mergeSort([]) ->

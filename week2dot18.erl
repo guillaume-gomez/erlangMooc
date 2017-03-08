@@ -1,5 +1,25 @@
 -module(week2dot18).
--export([mergeSort/1]).
+-export([say/2, join/1, mergeSort/1]).
+
+say([],[]) ->
+  [];
+
+say([],String) ->
+  String;
+
+say(String, []) ->
+  String;
+
+say([H| T], String) ->
+  [H | say(T, String)].
+
+join([]) ->
+  [];
+
+join([H |T]) ->
+  say(H,join(T)).
+
+
 
 mergeSort([]) ->
   [];

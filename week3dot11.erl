@@ -1,5 +1,5 @@
 -module(week3dot11).
--export([add/1,times/1,compose/2,id/1,iterate/1, sub/1]).
+-export([add/1,times/1,compose/2,id/1,iterate/1, sub/1, composer/1]).
 
 %%
 % In the shell exercice
@@ -50,7 +50,7 @@ id(X) ->
 
 iterate(0) ->
     dummy;
-iterate(N) ->
+iterate(_N) ->
     dummy.
 
 
@@ -73,3 +73,9 @@ sub(X) ->
 % A(3). = 15
 % S = week3dot11:compose(week3dot11:add(7), week3dot11:add(5))
 % S(3). = 15
+
+
+composer([H| T]) ->
+  lists:foldr(fun compose/2, H, T).
+
+

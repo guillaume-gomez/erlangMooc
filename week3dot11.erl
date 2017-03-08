@@ -16,13 +16,15 @@ times(X) ->
 compose(F,G) ->
     fun(X) -> G(F(X)) end.
 
+% pseudo fake function to invoke function
+% see iterate(N)
 id(X) ->
     X.
 
-iterate(0) ->
-    dummy;
-iterate(_N) ->
-    dummy.
+% iterate(0) ->
+%     dummy;
+% iterate(_N) ->
+%     dummy.
 
 
 sub(X) ->
@@ -133,5 +135,14 @@ twice(F) ->
 %
 
 
+iterate(N) ->
+  fun(F) ->
+    lists:foldr(fun compose/2, fun id/1, lists:duplicate(N,F))
+  end.
 
+% W = week3dot11:iterate(3).
+% #Fun<week3dot11.6.99930607>
+% Z = W(week3dot11:add(2)).
+% #Fun<week3dot11.2.99930607>
+% Z(5). = 5 +  2 + 2 + 2 = 11
 

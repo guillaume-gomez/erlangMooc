@@ -114,8 +114,7 @@ cycle(List) ->
 rand_(_) ->
   val(rand:uniform(3) - 1).
 
-
-
+% Tool methods %
 
 expand(paper) -> paper;
 expand(p) -> paper;

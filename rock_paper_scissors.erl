@@ -1,5 +1,5 @@
 -module(rock_paper_scissors).
--export([beat/1, lose/1, result/2, tournament/2, play/1, expand/1, rock/1]).
+-export([beat/1, lose/1, result/2, tournament/2, play/1, expand/1, rock/1, create_count_moves/1]).
 -define(Interacts, [rock, scissors, paper]).
 
 
@@ -115,6 +115,30 @@ rand_(_) ->
   val(rand:uniform(3) - 1).
 
 % Tool methods %
+least([]) ->
+  rock.
+
+create_count_moves(Moves) ->
+  create_count_moves([rock, scissors, paper], Moves).
+
+create_count_moves([], _Moves) ->
+  [];
+
+create_count_moves([H|T], Moves) ->
+  [ {H, count_occur(Moves, H)} | create_count_moves(T, Moves)].
+
+
+count_occur(List, Comparant) ->
+  count_occur(List, Comparant, 0).
+
+count_occur([], _Comparant, Val) ->
+  Val;
+
+count_occur([Comparant|T], Comparant, Val) ->
+  count_occur(T, Comparant, Val + 1);
+
+count_occur([H|T], Comparant, Val) ->
+  count_occur(T, Comparant, Val).
 
 expand(paper) -> paper;
 expand(p) -> paper;

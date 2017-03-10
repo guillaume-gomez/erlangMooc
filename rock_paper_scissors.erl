@@ -1,5 +1,7 @@
 -module(rock_paper_scissors).
 -export([beat/1, lose/1, result/2, tournament/2, play/1, expand/1, rock/1]).
+-define(Interacts, [rock, scissors, paper]).
+
 
 -spec beat(atom()) -> atom().
 -spec lose(atom()) -> atom().
@@ -86,7 +88,7 @@ add(H, Acc) ->
   H + Acc.
 
 
-% Strategies from the live coding 
+% Strategies from the live coding
 
 echo([]) ->
   paper;
@@ -111,6 +113,9 @@ cycle(List) ->
 
 rand_(_) ->
   val(rand:uniform(3) - 1).
+
+
+
 
 expand(paper) -> paper;
 expand(p) -> paper;

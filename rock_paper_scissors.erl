@@ -116,7 +116,18 @@ rand_(_) ->
 
 % Tool methods %
 least([]) ->
-  rock.
+  rock;
+
+least(List) ->
+  {Item, Val} = min_occur(List),
+  Item.
+
+most([]) ->
+  rock;
+
+most(List) ->
+  {Item, Val} = max_occur(List),
+  Item.
 
 create_count_moves(Moves) ->
   create_count_moves([rock, scissors, paper], Moves).

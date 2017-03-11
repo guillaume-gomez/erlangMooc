@@ -1,5 +1,5 @@
 -module(rock_paper_scissors).
--export([beat/1, lose/1, result/2, tournament/2, play/1, expand/1, rock/1, create_count_moves/1, min_occur/1]).
+-export([beat/1, lose/1, result/2, tournament/2, play/1, expand/1, rock/1, create_count_moves/1, min_occur/1, max_occur/1]).
 -define(Interacts, [rock, scissors, paper]).
 
 
@@ -140,18 +140,23 @@ count_occur([Comparant|T], Comparant, Val) ->
 count_occur([H|T], Comparant, Val) ->
   count_occur(T, Comparant, Val).
 
-min_occur([H|T]) ->
-  min_occur([H|T], H).
+filter_occur(F, [H|T]) ->
+  filter_occur(F, [H|T], H).
 
-min_occur([],Val) ->
-  Val;
+filter_occur(_F,[],{Item, Val}) ->
+  {Item, Val};
 
-min_occur([{_, H}|T], Val) when H < Val ->
-  min_occur(T, H);
+filter_occur(F,[{Item, H}|T], {_ItemStored, Val}) ->
+  case F(H, Val) of
+    true -> filter_occur(F,T, {Item, H});
+    false -> filter_occur(F, T, {_ItemStored, Val})
+  end.
 
-min_occur([{_, _H}|T], Val) ->
-  min_occur(T, Val).
+min_occur(List) ->
+  filter_occur(fun (X, Y) -> X =< Y end, List).
 
+max_occur(List) ->
+  filter_occur(fun (X, Y) -> X > Y end, List).
 
 expand(paper) -> paper;
 expand(p) -> paper;

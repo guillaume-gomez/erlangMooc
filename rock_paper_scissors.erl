@@ -1,5 +1,5 @@
 -module(rock_paper_scissors).
--export([beat/1, lose/1, result/2, tournament/2, play/1, expand/1, rock/1, create_count_moves/1]).
+-export([beat/1, lose/1, result/2, tournament/2, play/1, expand/1, rock/1, create_count_moves/1, min_occur/1]).
 -define(Interacts, [rock, scissors, paper]).
 
 
@@ -139,6 +139,19 @@ count_occur([Comparant|T], Comparant, Val) ->
 
 count_occur([H|T], Comparant, Val) ->
   count_occur(T, Comparant, Val).
+
+min_occur([H|T]) ->
+  min_occur([H|T], H).
+
+min_occur([],Val) ->
+  Val;
+
+min_occur([{_, H}|T], Val) when H < Val ->
+  min_occur(T, H);
+
+min_occur([{_, _H}|T], Val) ->
+  min_occur(T, Val).
+
 
 expand(paper) -> paper;
 expand(p) -> paper;

@@ -58,13 +58,13 @@ outcome(lose) ->
   -1.
 
 val(0) ->
-  draw;
+  rock;
 
 val(1) ->
-  win;
+  scissors;
 
 val(-1) ->
-  lose.
+  paper.
 
 % compute an array of plays
 
@@ -114,7 +114,6 @@ cycle(List) ->
 rand_(_) ->
   val(rand:uniform(3) - 1).
 
-% Tool methods %
 least([]) ->
   rock;
 
@@ -129,6 +128,14 @@ most(List) ->
   {Item, Val} = max_occur(List),
   Item.
 
+composeStrategy(F,G) ->
+    fun(X) -> G(F(X)) end.
+
+randomStrategy(ListOfStrategy) ->
+  lists:nth(rand:uniform(length(ListOfStrategy)), ListOfStrategy).
+
+
+% Tool methods %
 create_count_moves(Moves) ->
   create_count_moves([rock, scissors, paper], Moves).
 
